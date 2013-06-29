@@ -45,7 +45,7 @@ class SentinelClientWorker(stages: PipelineStage[PipelineContext, ByteString, By
         TcpPipelineHandler.withLogger(log,
           stages >>
             new TcpReadWriteAdapter >>
-            new BackpressureBuffer(lowBytes = 100, highBytes = 1000, maxBytes = 1000000))
+            new BackpressureBuffer(lowBytes = 10000, highBytes = 100000, maxBytes = 10000000))
 
       val handler = context.actorOf(TcpPipelineHandler.props(init, sender, self).withDeploy(Deploy.local))
       context watch handler
@@ -170,6 +170,7 @@ class RedisWithAkkaPipeline extends TestKit(ActorSystem()) with SpecificationLik
 
   implicit val ec = ExecutionContext.Implicits.global
 
+  import redis.Converter._
 
   "aa" should {
     "one test" in {
